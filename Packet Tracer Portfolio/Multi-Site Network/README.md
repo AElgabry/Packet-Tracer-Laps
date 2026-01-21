@@ -9,13 +9,7 @@ In this simulation, I emulated a corporate expansion scenario where a primary he
 
 ---
 
-## 2. Network Topology
-![Network Topology Diagram](topology.png)
-*(Note: This diagram illustrates the physical connections between the 2901 Routers and 2960 Switches across the WAN link)*
-
----
-
-## 3. Technical Implementation Details
+## 2. Technical Implementation Details
 
 My implementation focused on manually configuring the end-to-end network infrastructure for two distinct sites.
 
@@ -29,13 +23,3 @@ To enable communication between the isolated VLANs without using expensive Layer
 * **Sub-Interfaces:** Divided the physical `GigabitEthernet0/0` interface into logical sub-interfaces.
 * **Encapsulation:** Applied `encapsulation dot1Q` tags to match the VLAN IDs.
 * **Gateway Services:** Assigned distinct IP subnets to serve as default gateways for each VLAN.
-
-```cisco
-/* Configuration snippet from Router0 (Site A) */
-interface GigabitEthernet0/0.10
- encapsulation dot1Q 10
- ip address 10.0.0.1 255.0.0.0
-!
-interface GigabitEthernet0/0.20
- encapsulation dot1Q 20
- ip address 20.0.0.1 255.0.0.0
