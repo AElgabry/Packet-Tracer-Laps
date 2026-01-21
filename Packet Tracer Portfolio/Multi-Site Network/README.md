@@ -1,34 +1,41 @@
-# Site-to-Site WAN Network Simulation
+# Enterprise WAN Architecture: Dual-Branch Inter-VLAN Routing
 
-## 📌 Project Overview
-This project simulates a **Wide Area Network (WAN)** connecting two geographically separated office branches ("Site A" and "Site B"). The topology demonstrates how distinct Local Area Networks (LANs) communicate over a serial link using **Static Routing** and **Router-on-a-Stick** for internal segmentation.
+## 1. Project Executive Summary
+This project demonstrates the design and implementation of a robust **Wide Area Network (WAN)** infrastructure connecting two geographically separated branch offices. The primary objective was to establish seamless connectivity between sites while maintaining strict logical separation of departments using **VLAN segmentation**.
 
-## 🏗 Network Architecture
-* **WAN Edge:** Two Cisco 2901 Routers connect via a Serial interface, simulating a leased line connection between offices.
-* **LAN Core:** Each site utilizes a generic Router-on-a-Stick configuration to manage traffic between local VLANs.
-* **Access Layer:** Cisco 2960 switches provide connectivity to end devices at each site.
+In this simulation, I emulated a corporate expansion scenario where a primary headquarters (Site A) requires a stable link to a new remote branch (Site B). Instead of a flat network, I architected a hierarchical design that ensures broadcast containment, security, and efficient address management.
 
-## 🔧 Key Features & Technologies
-* **WAN Connectivity:** Sites are linked via a Serial connection (Network `25.0.0.0/8`) using HDLC encapsulation.
-* **Static Routing:** Manual routing entries guide traffic between the two remote sites.
-* **Inter-VLAN Routing:** Local routing at each site is handled via sub-interfaces (802.1Q).
-* **DHCP Services:** Each router acts as a DHCP server for its local VLANs, automatically assigning IPs to workstations.
-* **DCE/DTE Configuration:** The WAN link is clocked at 2,000,000 bps on the DCE side (Router3) to synchronize the serial connection.
+**Key Technologies:** Cisco Packet Tracer, VLANs (802.1Q), Router-on-a-Stick (ROAS), Static Routing, DHCP, Serial WAN.
 
-## 📊 Configuration Table
+---
 
-| Site | Department/Label | VLAN ID | Network Subnet | Gateway IP |
-| :--- | :--- | :--- | :--- | :--- |
-| **Site A (Left)** | VLAN 10 | 10 | `10.0.0.0/8` | `10.0.0.1` |
-| **Site A (Left)** | VLAN 20 | 20 | `20.0.0.0/8` | `20.0.0.1` |
-| **Site B (Right)** | VLAN 10* | 10 | `30.0.0.0/8` | `30.0.0.1` |
-| **Site B (Right)** | VLAN 20* | 20 | `40.0.0.0/8` | `40.0.0.1` |
-| **WAN Link** | Serial Link | N/A | `25.0.0.0/8` | N/A |
+## 2. Network Topology
+![Network Topology Diagram](topology.png)
+*(Note: This diagram illustrates the physical connections between the 2901 Routers and 2960 Switches across the WAN link)*
 
-*\*Note: VLAN IDs 10 and 20 are reused at Site B but correspond to different IP subnets (30.x and 40.x).*
+---
 
-## 🚀 Usage
-1. Open the `.pkt` file in **Cisco Packet Tracer**.
-2. **Verify WAN Link:** Hover over the Serial cable (red zigzag) to ensure link lights are green.
-3. **Test Local Routing:** Ping from PC0 (`10.x`) to PC1 (`20.x`) to test Router-on-a-Stick at Site A.
-   * *Note:* The first ping may fail due to ARP resolution; try twice.
+## 3. Technical Implementation Details
+
+My implementation focused on manually configuring the end-to-end network infrastructure for two distinct sites.
+
+### A. Layer 2 Segmentation (Switching)
+* **VLAN Configuration:** Created **VLAN 10** and **VLAN 20** on both site switches to segregate user traffic at the data link layer.
+* **Trunking:** Configured `GigabitEthernet0/1` uplinks as **802.1Q Trunk ports** to allow multiple VLANs to traverse the single physical link to the router.
+* **Access Control:** Assigned specific FastEthernet ports to their respective VLANs (e.g., `switchport access vlan 10`) to enforce security boundaries.
+
+### B. Router-on-a-Stick (Inter-VLAN Routing)
+To enable communication between the isolated VLANs without using expensive Layer 3 switches, I deployed a **Router-on-a-Stick** design on the local routers.
+* **Sub-Interfaces:** Divided the physical `GigabitEthernet0/0` interface into logical sub-interfaces.
+* **Encapsulation:** Applied `encapsulation dot1Q` tags to match the VLAN IDs.
+* **Gateway Services:** Assigned distinct IP subnets to serve as default gateways for each VLAN.
+
+```cisco
+/* Configuration snippet from Router0 (Site A) */
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 10.0.0.1 255.0.0.0
+!
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 20.0.0.1 255.0.0.0
