@@ -9,7 +9,29 @@ In this simulation, I emulated a corporate expansion scenario where a primary he
 
 ---
 
-## 2. Technical Implementation Details
+## 2. Network Topology
+![Network Topology Diagram](topology.png)
+*(Note: This diagram illustrates the physical connections between the 2901 Routers and 2960 Switches across the WAN link)*
+
+---
+
+## 3. IP Addressing Schema
+The following table outlines the IP allocation for the network devices and their respective interfaces.
+
+| Device | Interface | IP Address | Subnet Mask | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Router0 (Site A)** | G0/0.10 | 10.0.0.1 | 255.0.0.0 | VLAN 10 Gateway (Sales/Admin) |
+| | G0/0.20 | 20.0.0.1 | 255.0.0.0 | VLAN 20 Gateway (IT/Support) |
+| | S0/1/0 | 25.0.0.1 | 255.0.0.0 | WAN Link to Site B |
+| **Router3 (Site B)** | G0/0.10 | 30.0.0.1 | 255.0.0.0 | VLAN 10 Gateway |
+| | G0/0.20 | 40.0.0.1 | 255.0.0.0 | VLAN 20 Gateway |
+| | S0/0/0 | 25.0.0.2 | 255.0.0.0 | WAN Link (DCE Side) |
+| **PC0 (Site A)** | NIC | *DHCP* | 255.0.0.0 | Assigned via Router0 Pool |
+| **PC3 (Site B)** | NIC | *DHCP* | 255.0.0.0 | Assigned via Router3 Pool |
+
+---
+
+## 4. Technical Implementation Details
 
 My implementation focused on manually configuring the end-to-end network infrastructure for two distinct sites.
 
@@ -23,3 +45,7 @@ To enable communication between the isolated VLANs without using expensive Layer
 * **Sub-Interfaces:** Divided the physical `GigabitEthernet0/0` interface into logical sub-interfaces.
 * **Encapsulation:** Applied `encapsulation dot1Q` tags to match the VLAN IDs.
 * **Gateway Services:** Assigned distinct IP subnets to serve as default gateways for each VLAN.
+
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 20.0.0.1 255.0.0.0
