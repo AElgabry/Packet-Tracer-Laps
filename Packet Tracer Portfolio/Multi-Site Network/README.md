@@ -31,6 +31,4 @@ This project simulates a **Wide Area Network (WAN)** connecting two geographical
 1. Open the `.pkt` file in **Cisco Packet Tracer**.
 2. **Verify WAN Link:** Hover over the Serial cable (red zigzag) to ensure link lights are green.
 3. **Test Local Routing:** Ping from PC0 (`10.x`) to PC1 (`20.x`) to test Router-on-a-Stick at Site A.
-4. **Test WAN Routing:** Ping from PC0 (Site A) to PC2 (Site B).
-   * *Example:* Ping from `10.0.0.x` to `30.0.0.x`.
    * *Note:* The first ping may fail due to ARP resolution; try twice.
