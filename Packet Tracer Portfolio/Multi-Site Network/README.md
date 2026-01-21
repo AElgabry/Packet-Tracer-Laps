@@ -9,13 +9,7 @@ In this simulation, I emulated a corporate expansion scenario where a primary he
 
 ---
 
-## 2. Network Topology
-![Network Topology Diagram](topology.png)
-*(Note: This diagram illustrates the physical connections between the 2901 Routers and 2960 Switches across the WAN link)*
-
----
-
-## 3. IP Addressing Schema
+## 2. IP Addressing Schema
 The following table outlines the IP allocation for the network devices and their respective interfaces.
 
 | Device | Interface | IP Address | Subnet Mask | Description |
@@ -31,7 +25,7 @@ The following table outlines the IP allocation for the network devices and their
 
 ---
 
-## 4. Technical Implementation Details
+## 3. Technical Implementation Details
 
 My implementation focused on manually configuring the end-to-end network infrastructure for two distinct sites.
 
