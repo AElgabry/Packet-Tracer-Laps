@@ -27,5 +27,4 @@ This project simulates a segmented network infrastructure for a Small-to-Medium 
 ## 🚀 Usage
 1. Open the `.pkt` file in **Cisco Packet Tracer** (Version 7.0 or newer recommended).
 2. Wait for the network to converge (spanning tree) or press the "Fast Forward Time" button.
-3. **Verify Connectivity:** Open a Command Prompt on any PC and ping a PC in a different VLAN (e.g., Ping from HR PC12 to Sales PC16).
-4. **Test Security:** Attempt to connect an unauthorized device to ports `Fa0/1 - Fa0/6` to observe the Port Security violation.
+
